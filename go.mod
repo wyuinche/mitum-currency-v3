@@ -1,4 +1,4 @@
-module github.com/spikeekips/mitum-currency
+module github.com/ProtoconNet/mitum-currency
 
 go 1.16
 
