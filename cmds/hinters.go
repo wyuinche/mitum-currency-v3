@@ -55,12 +55,12 @@ var AddedHinters = []encoder.DecodeDetail{
 	{Hint: currency.TransfersItemMultiAmountsHint, Instance: currency.TransfersItemMultiAmounts{}},
 	{Hint: currency.TransfersItemSingleAmountHint, Instance: currency.TransfersItemSingleAmount{}},
 
-	{Hint: extension.CreateContractAccountsHint, Instance: extension.CreateContractAccounts{}},
-	{Hint: extension.CreateContractAccountsItemMultiAmountsHint, Instance: extension.CreateContractAccountsItemMultiAmounts{}},
-	{Hint: extension.CreateContractAccountsItemSingleAmountHint, Instance: extension.CreateContractAccountsItemSingleAmount{}},
-	{Hint: extension.WithdrawsHint, Instance: extension.Withdraws{}},
-	{Hint: extension.WithdrawsItemMultiAmountsHint, Instance: extension.WithdrawsItemMultiAmounts{}},
-	{Hint: extension.WithdrawsItemSingleAmountHint, Instance: extension.WithdrawsItemSingleAmount{}},
+	{Hint: extension.CreateContractAccountHint, Instance: extension.CreateContractAccount{}},
+	{Hint: extension.CreateContractAccountItemMultiAmountsHint, Instance: extension.CreateContractAccountItemMultiAmounts{}},
+	{Hint: extension.CreateContractAccountItemSingleAmountHint, Instance: extension.CreateContractAccountItemSingleAmount{}},
+	{Hint: extension.WithdrawHint, Instance: extension.Withdraw{}},
+	{Hint: extension.WithdrawItemMultiAmountsHint, Instance: extension.WithdrawItemMultiAmounts{}},
+	{Hint: extension.WithdrawItemSingleAmountHint, Instance: extension.WithdrawItemSingleAmount{}},
 
 	{Hint: isaacoperation.GenesisNetworkPolicyHint, Instance: isaacoperation.GenesisNetworkPolicy{}},
 	{Hint: isaacoperation.FixedSuffrageCandidateLimiterRuleHint, Instance: isaacoperation.FixedSuffrageCandidateLimiterRule{}},
@@ -91,8 +91,8 @@ var AddedSupportedHinters = []encoder.DecodeDetail{
 	{Hint: currency.SuffrageInflationFactHint, Instance: currency.SuffrageInflationFact{}},
 	{Hint: currency.TransfersFactHint, Instance: currency.TransfersFact{}},
 
-	{Hint: extension.CreateContractAccountsFactHint, Instance: extension.CreateContractAccountsFact{}},
-	{Hint: extension.WithdrawsFactHint, Instance: extension.WithdrawsFact{}},
+	{Hint: extension.CreateContractAccountFactHint, Instance: extension.CreateContractAccountFact{}},
+	{Hint: extension.WithdrawFactHint, Instance: extension.WithdrawFact{}},
 
 	{Hint: isaacoperation.GenesisNetworkPolicyFactHint, Instance: isaacoperation.GenesisNetworkPolicyFact{}},
 	{Hint: isaacoperation.SuffrageCandidateFactHint, Instance: isaacoperation.SuffrageCandidateFact{}},

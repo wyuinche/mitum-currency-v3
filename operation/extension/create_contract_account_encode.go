@@ -7,8 +7,8 @@ import (
 	"github.com/pkg/errors"
 )
 
-func (fact *CreateContractAccountsFact) unpack(enc encoder.Encoder, ow string, bit []byte) error {
-	e := util.StringError("failed to unmarshal CreateContractAccountsFact")
+func (fact *CreateContractAccountFact) unpack(enc encoder.Encoder, ow string, bit []byte) error {
+	e := util.StringError("failed to unmarshal CreateContractAccountFact")
 
 	switch a, err := base.DecodeAddress(ow, enc); {
 	case err != nil:
@@ -22,11 +22,11 @@ func (fact *CreateContractAccountsFact) unpack(enc encoder.Encoder, ow string, b
 		return e.Wrap(err)
 	}
 
-	items := make([]CreateContractAccountsItem, len(hit))
+	items := make([]CreateContractAccountItem, len(hit))
 	for i := range hit {
-		j, ok := hit[i].(CreateContractAccountsItem)
+		j, ok := hit[i].(CreateContractAccountItem)
 		if !ok {
-			return e.Wrap(errors.Errorf("expected CreateContractAccountsItem, not %T", hit[i]))
+			return e.Wrap(errors.Errorf("expected CreateContractAccountItem, not %T", hit[i]))
 		}
 
 		items[i] = j

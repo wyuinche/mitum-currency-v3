@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (it BaseCreateContractAccountsItem) MarshalBSON() ([]byte, error) {
+func (it BaseCreateContractAccountItem) MarshalBSON() ([]byte, error) {
 	return bsonenc.Marshal(
 		bson.M{
 			"_hint":    it.Hint().String(),
@@ -18,17 +18,17 @@ func (it BaseCreateContractAccountsItem) MarshalBSON() ([]byte, error) {
 	)
 }
 
-type CreateContractAccountsItemBSONUnmarshaler struct {
+type CreateContractAccountItemBSONUnmarshaler struct {
 	Hint     string   `bson:"_hint"`
 	Keys     bson.Raw `bson:"keys"`
 	Amounts  bson.Raw `bson:"amounts"`
 	AddrType string   `bson:"addrtype"`
 }
 
-func (it *BaseCreateContractAccountsItem) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
-	e := util.StringError("failed to decode bson of BaseCreateContractAccountsItem")
+func (it *BaseCreateContractAccountItem) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
+	e := util.StringError("failed to decode bson of BaseCreateContractAccountItem")
 
-	var uit CreateContractAccountsItemBSONUnmarshaler
+	var uit CreateContractAccountItemBSONUnmarshaler
 	if err := bson.Unmarshal(b, &uit); err != nil {
 		return e.Wrap(err)
 	}

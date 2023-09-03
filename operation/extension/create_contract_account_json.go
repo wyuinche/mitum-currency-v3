@@ -2,36 +2,37 @@ package extension
 
 import (
 	"encoding/json"
+
 	"github.com/ProtoconNet/mitum-currency/v3/common"
 	"github.com/ProtoconNet/mitum2/base"
 	"github.com/ProtoconNet/mitum2/util"
 	jsonenc "github.com/ProtoconNet/mitum2/util/encoder/json"
 )
 
-type CreateContractAccountsFactJSONMarshaler struct {
+type CreateContractAccountFactJSONMarshaler struct {
 	base.BaseFactJSONMarshaler
-	Owner base.Address                 `json:"sender"`
-	Items []CreateContractAccountsItem `json:"items"`
+	Owner base.Address                `json:"sender"`
+	Items []CreateContractAccountItem `json:"items"`
 }
 
-func (fact CreateContractAccountsFact) MarshalJSON() ([]byte, error) {
-	return util.MarshalJSON(CreateContractAccountsFactJSONMarshaler{
+func (fact CreateContractAccountFact) MarshalJSON() ([]byte, error) {
+	return util.MarshalJSON(CreateContractAccountFactJSONMarshaler{
 		BaseFactJSONMarshaler: fact.BaseFact.JSONMarshaler(),
 		Owner:                 fact.sender,
 		Items:                 fact.items,
 	})
 }
 
-type CreateContractAccountsFactJSONUnMarshaler struct {
+type CreateContractAccountFactJSONUnMarshaler struct {
 	base.BaseFactJSONUnmarshaler
 	Owner string          `json:"sender"`
 	Items json.RawMessage `json:"items"`
 }
 
-func (fact *CreateContractAccountsFact) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
-	e := util.StringError("failed to decode json of CreateContractAccountsFact")
+func (fact *CreateContractAccountFact) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
+	e := util.StringError("failed to decode json of CreateContractAccountFact")
 
-	var uf CreateContractAccountsFactJSONUnMarshaler
+	var uf CreateContractAccountFactJSONUnMarshaler
 	if err := enc.Unmarshal(b, &uf); err != nil {
 		return e.Wrap(err)
 	}
@@ -41,18 +42,18 @@ func (fact *CreateContractAccountsFact) DecodeJSON(b []byte, enc *jsonenc.Encode
 	return fact.unpack(enc, uf.Owner, uf.Items)
 }
 
-type createContractAccountsMarshaler struct {
+type createContractAccountMarshaler struct {
 	common.BaseOperationJSONMarshaler
 }
 
-func (op CreateContractAccounts) MarshalJSON() ([]byte, error) {
-	return util.MarshalJSON(createContractAccountsMarshaler{
+func (op CreateContractAccount) MarshalJSON() ([]byte, error) {
+	return util.MarshalJSON(createContractAccountMarshaler{
 		BaseOperationJSONMarshaler: op.BaseOperation.JSONMarshaler(),
 	})
 }
 
-func (op *CreateContractAccounts) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
-	e := util.StringError("failed to decode json of CreateContractAccounts")
+func (op *CreateContractAccount) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
+	e := util.StringError("failed to decode json of CreateContractAccount")
 
 	var ubo common.BaseOperation
 	if err := ubo.DecodeJSON(b, enc); err != nil {

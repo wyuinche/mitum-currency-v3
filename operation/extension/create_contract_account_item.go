@@ -7,15 +7,15 @@ import (
 	"github.com/ProtoconNet/mitum2/util/hint"
 )
 
-type BaseCreateContractAccountsItem struct {
+type BaseCreateContractAccountItem struct {
 	hint.BaseHinter
 	keys        types.AccountKeys
 	amounts     []types.Amount
 	addressType hint.Type
 }
 
-func NewBaseCreateContractAccountsItem(ht hint.Hint, keys types.AccountKeys, amounts []types.Amount, addrType hint.Type) BaseCreateContractAccountsItem {
-	return BaseCreateContractAccountsItem{
+func NewBaseCreateContractAccountItem(ht hint.Hint, keys types.AccountKeys, amounts []types.Amount, addrType hint.Type) BaseCreateContractAccountItem {
+	return BaseCreateContractAccountItem{
 		BaseHinter:  hint.NewBaseHinter(ht),
 		keys:        keys,
 		amounts:     amounts,
@@ -23,7 +23,7 @@ func NewBaseCreateContractAccountsItem(ht hint.Hint, keys types.AccountKeys, amo
 	}
 }
 
-func (it BaseCreateContractAccountsItem) Bytes() []byte {
+func (it BaseCreateContractAccountItem) Bytes() []byte {
 	length := 2
 	bs := make([][]byte, len(it.amounts)+length)
 	bs[0] = it.keys.Bytes()
@@ -35,7 +35,7 @@ func (it BaseCreateContractAccountsItem) Bytes() []byte {
 	return util.ConcatBytesSlice(bs...)
 }
 
-func (it BaseCreateContractAccountsItem) IsValid([]byte) error {
+func (it BaseCreateContractAccountItem) IsValid([]byte) error {
 	if n := len(it.amounts); n == 0 {
 		return util.ErrInvalid.Errorf("empty amounts")
 	}
@@ -66,11 +66,11 @@ func (it BaseCreateContractAccountsItem) IsValid([]byte) error {
 	return nil
 }
 
-func (it BaseCreateContractAccountsItem) Keys() types.AccountKeys {
+func (it BaseCreateContractAccountItem) Keys() types.AccountKeys {
 	return it.keys
 }
 
-func (it BaseCreateContractAccountsItem) Address() (base.Address, error) {
+func (it BaseCreateContractAccountItem) Address() (base.Address, error) {
 	if it.addressType == types.AddressHint.Type() {
 		return types.NewAddressFromKeys(it.keys)
 	} else if it.addressType == types.EthAddressHint.Type() {
@@ -79,15 +79,15 @@ func (it BaseCreateContractAccountsItem) Address() (base.Address, error) {
 	return nil, util.ErrInvalid.Errorf("invalid address hint")
 }
 
-func (it BaseCreateContractAccountsItem) AddressType() hint.Type {
+func (it BaseCreateContractAccountItem) AddressType() hint.Type {
 	return it.addressType
 }
 
-func (it BaseCreateContractAccountsItem) Amounts() []types.Amount {
+func (it BaseCreateContractAccountItem) Amounts() []types.Amount {
 	return it.amounts
 }
 
-func (it BaseCreateContractAccountsItem) Rebuild() CreateContractAccountsItem {
+func (it BaseCreateContractAccountItem) Rebuild() CreateContractAccountItem {
 	ams := make([]types.Amount, len(it.amounts))
 	for i := range it.amounts {
 		am := it.amounts[i]

@@ -9,7 +9,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (fact CreateContractAccountsFact) MarshalBSON() ([]byte, error) {
+func (fact CreateContractAccountFact) MarshalBSON() ([]byte, error) {
 	return bsonenc.Marshal(
 		bson.M{
 			"_hint":  fact.Hint().String(),
@@ -21,14 +21,14 @@ func (fact CreateContractAccountsFact) MarshalBSON() ([]byte, error) {
 	)
 }
 
-type CreateContractAccountsFactBSONUnmarshaler struct {
+type CreateContractAccountFactBSONUnmarshaler struct {
 	Hint   string   `bson:"_hint"`
 	Sender string   `bson:"sender"`
 	Items  bson.Raw `bson:"items"`
 }
 
-func (fact *CreateContractAccountsFact) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
-	e := util.StringError("failed to decode bson of CreateContractAccountsFact")
+func (fact *CreateContractAccountFact) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
+	e := util.StringError("failed to decode bson of CreateContractAccountFact")
 
 	var ubf common.BaseFactBSONUnmarshaler
 
@@ -39,7 +39,7 @@ func (fact *CreateContractAccountsFact) DecodeBSON(b []byte, enc *bsonenc.Encode
 	fact.BaseFact.SetHash(valuehash.NewBytesFromString(ubf.Hash))
 	fact.BaseFact.SetToken(ubf.Token)
 
-	var uf CreateContractAccountsFactBSONUnmarshaler
+	var uf CreateContractAccountFactBSONUnmarshaler
 	if err := bson.Unmarshal(b, &uf); err != nil {
 		return e.Wrap(err)
 	}
@@ -53,7 +53,7 @@ func (fact *CreateContractAccountsFact) DecodeBSON(b []byte, enc *bsonenc.Encode
 	return fact.unpack(enc, uf.Sender, uf.Items)
 }
 
-func (op CreateContractAccounts) MarshalBSON() ([]byte, error) {
+func (op CreateContractAccount) MarshalBSON() ([]byte, error) {
 	return bsonenc.Marshal(
 		bson.M{
 			"_hint": op.Hint().String(),
@@ -63,8 +63,8 @@ func (op CreateContractAccounts) MarshalBSON() ([]byte, error) {
 		})
 }
 
-func (op *CreateContractAccounts) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
-	e := util.StringError("failed to decode bson of CreateContractAccounts")
+func (op *CreateContractAccount) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
+	e := util.StringError("failed to decode bson of CreateContractAccount")
 
 	var ubo common.BaseOperation
 	if err := ubo.DecodeBSON(b, enc); err != nil {

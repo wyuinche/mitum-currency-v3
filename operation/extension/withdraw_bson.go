@@ -10,7 +10,7 @@ import (
 	"github.com/ProtoconNet/mitum2/util/valuehash"
 )
 
-func (fact WithdrawsFact) MarshalBSON() ([]byte, error) {
+func (fact WithdrawFact) MarshalBSON() ([]byte, error) {
 	return bsonenc.Marshal(
 		bson.M{
 			"_hint":  fact.Hint().String(),
@@ -22,14 +22,14 @@ func (fact WithdrawsFact) MarshalBSON() ([]byte, error) {
 	)
 }
 
-type WithdrawsFactBSONUnmarshaler struct {
+type WithdrawFactBSONUnmarshaler struct {
 	Hint   string   `bson:"_hint"`
 	Sender string   `bson:"sender"`
 	Items  bson.Raw `bson:"items"`
 }
 
-func (fact *WithdrawsFact) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
-	e := util.StringError("failed to decode bson of WithdrawsFact")
+func (fact *WithdrawFact) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
+	e := util.StringError("failed to decode bson of WithdrawFact")
 
 	var ubf common.BaseFactBSONUnmarshaler
 	if err := enc.Unmarshal(b, &ubf); err != nil {
@@ -39,7 +39,7 @@ func (fact *WithdrawsFact) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
 	fact.BaseFact.SetHash(valuehash.NewBytesFromString(ubf.Hash))
 	fact.BaseFact.SetToken(ubf.Token)
 
-	var uf WithdrawsFactBSONUnmarshaler
+	var uf WithdrawFactBSONUnmarshaler
 	if err := bson.Unmarshal(b, &uf); err != nil {
 		return e.Wrap(err)
 	}
@@ -54,11 +54,11 @@ func (fact *WithdrawsFact) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
 	return fact.unpack(enc, uf.Sender, uf.Items)
 }
 
-func (op Withdraws) MarshalBSON() ([]byte, error) {
+func (op Withdraw) MarshalBSON() ([]byte, error) {
 	return bsonenc.Marshal(op.BaseOperation)
 }
 
-func (op *Withdraws) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
+func (op *Withdraw) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
 	e := util.StringError("failed to decode bson of Withdraw")
 
 	var ubo common.BaseOperation

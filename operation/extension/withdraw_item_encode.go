@@ -2,23 +2,23 @@ package extension
 
 import (
 	"github.com/ProtoconNet/mitum-currency/v3/types"
+	"github.com/ProtoconNet/mitum2/base"
 	"github.com/ProtoconNet/mitum2/util"
 	"github.com/ProtoconNet/mitum2/util/encoder"
 	"github.com/ProtoconNet/mitum2/util/hint"
 	"github.com/pkg/errors"
 )
 
-func (it *BaseCreateContractAccountsItem) unpack(enc encoder.Encoder, ht hint.Hint, bks []byte, bam []byte, sadtype string) error {
-	e := util.StringError("failed to unmarshal BaseCreateContractAccountsItem")
+func (it *BaseWithdrawItem) unpack(enc encoder.Encoder, ht hint.Hint, tg string, bam []byte) error {
+	e := util.StringError("failed to unmarshal BaseWithdrawItem")
 
 	it.BaseHinter = hint.NewBaseHinter(ht)
 
-	if hinter, err := enc.Decode(bks); err != nil {
+	switch a, err := base.DecodeAddress(tg, enc); {
+	case err != nil:
 		return e.Wrap(err)
-	} else if k, ok := hinter.(types.AccountKeys); !ok {
-		return e.Wrap(errors.Errorf("expected AccountsKeys, not %T", hinter))
-	} else {
-		it.keys = k
+	default:
+		it.target = a
 	}
 
 	ham, err := enc.DecodeSlice(bam)
@@ -37,7 +37,6 @@ func (it *BaseCreateContractAccountsItem) unpack(enc encoder.Encoder, ht hint.Hi
 	}
 
 	it.amounts = amounts
-	it.addressType = hint.Type(sadtype)
 
 	return nil
 }

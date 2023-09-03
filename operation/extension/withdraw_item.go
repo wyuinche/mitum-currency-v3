@@ -7,21 +7,21 @@ import (
 	"github.com/ProtoconNet/mitum2/util/hint"
 )
 
-type BaseWithdrawsItem struct {
+type BaseWithdrawItem struct {
 	hint.BaseHinter
 	target  base.Address
 	amounts []types.Amount
 }
 
-func NewBaseWithdrawsItem(ht hint.Hint, target base.Address, amounts []types.Amount) BaseWithdrawsItem {
-	return BaseWithdrawsItem{
+func NewBaseWithdrawItem(ht hint.Hint, target base.Address, amounts []types.Amount) BaseWithdrawItem {
+	return BaseWithdrawItem{
 		BaseHinter: hint.NewBaseHinter(ht),
 		target:     target,
 		amounts:    amounts,
 	}
 }
 
-func (it BaseWithdrawsItem) Bytes() []byte {
+func (it BaseWithdrawItem) Bytes() []byte {
 	bs := make([][]byte, len(it.amounts)+1)
 	bs[0] = it.target.Bytes()
 
@@ -32,7 +32,7 @@ func (it BaseWithdrawsItem) Bytes() []byte {
 	return util.ConcatBytesSlice(bs...)
 }
 
-func (it BaseWithdrawsItem) IsValid([]byte) error {
+func (it BaseWithdrawItem) IsValid([]byte) error {
 	if err := util.CheckIsValiders(nil, false, it.target); err != nil {
 		return err
 	}
@@ -59,15 +59,15 @@ func (it BaseWithdrawsItem) IsValid([]byte) error {
 	return nil
 }
 
-func (it BaseWithdrawsItem) Target() base.Address {
+func (it BaseWithdrawItem) Target() base.Address {
 	return it.target
 }
 
-func (it BaseWithdrawsItem) Amounts() []types.Amount {
+func (it BaseWithdrawItem) Amounts() []types.Amount {
 	return it.amounts
 }
 
-func (it BaseWithdrawsItem) Rebuild() WithdrawsItem {
+func (it BaseWithdrawItem) Rebuild() WithdrawItem {
 	ams := make([]types.Amount, len(it.amounts))
 	for i := range it.amounts {
 		am := it.amounts[i]

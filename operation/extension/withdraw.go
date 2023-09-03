@@ -10,30 +10,30 @@ import (
 )
 
 var (
-	WithdrawsFactHint = hint.MustNewHint("mitum-currency-contract-account-withdraws-operation-fact-v0.0.1")
-	WithdrawsHint     = hint.MustNewHint("mitum-currency-contract-account-withdraws-operation-v0.0.1")
+	WithdrawFactHint = hint.MustNewHint("mitum-currency-contract-account-withdraw-operation-fact-v0.0.1")
+	WithdrawHint     = hint.MustNewHint("mitum-currency-contract-account-withdraw-operation-v0.0.1")
 )
 
-var MaxWithdrawsItems uint = 10
+var MaxWithdrawItems uint = 10
 
-type WithdrawsItem interface {
+type WithdrawItem interface {
 	hint.Hinter
 	util.IsValider
 	currency.AmountsItem
 	Bytes() []byte
 	Target() base.Address
-	Rebuild() WithdrawsItem
+	Rebuild() WithdrawItem
 }
 
-type WithdrawsFact struct {
+type WithdrawFact struct {
 	base.BaseFact
 	sender base.Address
-	items  []WithdrawsItem
+	items  []WithdrawItem
 }
 
-func NewWithdrawsFact(token []byte, sender base.Address, items []WithdrawsItem) WithdrawsFact {
-	bf := base.NewBaseFact(WithdrawsFactHint, token)
-	fact := WithdrawsFact{
+func NewWithdrawFact(token []byte, sender base.Address, items []WithdrawItem) WithdrawFact {
+	bf := base.NewBaseFact(WithdrawFactHint, token)
+	fact := WithdrawFact{
 		BaseFact: bf,
 		sender:   sender,
 		items:    items,
@@ -43,19 +43,19 @@ func NewWithdrawsFact(token []byte, sender base.Address, items []WithdrawsItem) 
 	return fact
 }
 
-func (fact WithdrawsFact) Hash() util.Hash {
+func (fact WithdrawFact) Hash() util.Hash {
 	return fact.BaseFact.Hash()
 }
 
-func (fact WithdrawsFact) GenerateHash() util.Hash {
+func (fact WithdrawFact) GenerateHash() util.Hash {
 	return valuehash.NewSHA256(fact.Bytes())
 }
 
-func (fact WithdrawsFact) Token() base.Token {
+func (fact WithdrawFact) Token() base.Token {
 	return fact.BaseFact.Token()
 }
 
-func (fact WithdrawsFact) Bytes() []byte {
+func (fact WithdrawFact) Bytes() []byte {
 	its := make([][]byte, len(fact.items))
 	for i := range fact.items {
 		its[i] = fact.items[i].Bytes()
@@ -68,7 +68,7 @@ func (fact WithdrawsFact) Bytes() []byte {
 	)
 }
 
-func (fact WithdrawsFact) IsValid(b []byte) error {
+func (fact WithdrawFact) IsValid(b []byte) error {
 	if err := fact.BaseHinter.IsValid(nil); err != nil {
 		return err
 	}
@@ -79,8 +79,8 @@ func (fact WithdrawsFact) IsValid(b []byte) error {
 
 	if n := len(fact.items); n < 1 {
 		return util.ErrInvalid.Errorf("empty items")
-	} else if n > int(MaxWithdrawsItems) {
-		return util.ErrInvalid.Errorf("items, %d over max, %d", n, MaxWithdrawsItems)
+	} else if n > int(MaxWithdrawItems) {
+		return util.ErrInvalid.Errorf("items, %d over max, %d", n, MaxWithdrawItems)
 	}
 
 	if err := util.CheckIsValiders(nil, false, fact.sender); err != nil {
@@ -108,16 +108,16 @@ func (fact WithdrawsFact) IsValid(b []byte) error {
 	return nil
 }
 
-func (fact WithdrawsFact) Sender() base.Address {
+func (fact WithdrawFact) Sender() base.Address {
 	return fact.sender
 }
 
-func (fact WithdrawsFact) Items() []WithdrawsItem {
+func (fact WithdrawFact) Items() []WithdrawItem {
 	return fact.items
 }
 
-func (fact WithdrawsFact) Rebuild() WithdrawsFact {
-	items := make([]WithdrawsItem, len(fact.items))
+func (fact WithdrawFact) Rebuild() WithdrawFact {
+	items := make([]WithdrawItem, len(fact.items))
 	for i := range fact.items {
 		it := fact.items[i]
 		items[i] = it.Rebuild()
@@ -129,7 +129,7 @@ func (fact WithdrawsFact) Rebuild() WithdrawsFact {
 	return fact
 }
 
-func (fact WithdrawsFact) Addresses() ([]base.Address, error) {
+func (fact WithdrawFact) Addresses() ([]base.Address, error) {
 	as := make([]base.Address, len(fact.items)+1)
 	for i := range fact.items {
 		as[i] = fact.items[i].Target()
@@ -140,15 +140,15 @@ func (fact WithdrawsFact) Addresses() ([]base.Address, error) {
 	return as, nil
 }
 
-type Withdraws struct {
+type Withdraw struct {
 	common.BaseOperation
 }
 
-func NewWithdraws(fact WithdrawsFact) (Withdraws, error) {
-	return Withdraws{BaseOperation: common.NewBaseOperation(WithdrawsHint, fact)}, nil
+func NewWithdraw(fact WithdrawFact) (Withdraw, error) {
+	return Withdraw{BaseOperation: common.NewBaseOperation(WithdrawHint, fact)}, nil
 }
 
-func (op *Withdraws) HashSign(priv base.Privatekey, networkID base.NetworkID) error {
+func (op *Withdraw) HashSign(priv base.Privatekey, networkID base.NetworkID) error {
 	err := op.Sign(priv, networkID)
 	if err != nil {
 		return err

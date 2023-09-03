@@ -2,6 +2,7 @@ package extension
 
 import (
 	"encoding/json"
+
 	"github.com/ProtoconNet/mitum-currency/v3/types"
 	"github.com/ProtoconNet/mitum2/base"
 	"github.com/ProtoconNet/mitum2/util"
@@ -9,30 +10,30 @@ import (
 	"github.com/ProtoconNet/mitum2/util/hint"
 )
 
-type WithdrawsItemJSONMarshaler struct {
+type BaseWithdrawItemJSONMarshaler struct {
 	hint.BaseHinter
 	Target  base.Address   `json:"target"`
 	Amounts []types.Amount `json:"amounts"`
 }
 
-func (it BaseWithdrawsItem) MarshalJSON() ([]byte, error) {
-	return util.MarshalJSON(WithdrawsItemJSONMarshaler{
+func (it BaseWithdrawItem) MarshalJSON() ([]byte, error) {
+	return util.MarshalJSON(BaseWithdrawItemJSONMarshaler{
 		BaseHinter: it.BaseHinter,
 		Target:     it.target,
 		Amounts:    it.amounts,
 	})
 }
 
-type BaseWithdrawsItemJSONUnpacker struct {
+type BaseWithdrawItemJSONUnmarshaler struct {
 	Hint    hint.Hint       `json:"_hint"`
 	Target  string          `json:"target"`
 	Amounts json.RawMessage `json:"amounts"`
 }
 
-func (it *BaseWithdrawsItem) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
-	e := util.StringError("failed to decode json of BaseWithdrawsItem")
+func (it *BaseWithdrawItem) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
+	e := util.StringError("failed to decode json of BaseWithdrawItem")
 
-	var uit BaseWithdrawsItemJSONUnpacker
+	var uit BaseWithdrawItemJSONUnmarshaler
 	if err := enc.Unmarshal(b, &uit); err != nil {
 		return e.Wrap(err)
 	}

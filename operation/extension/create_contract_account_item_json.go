@@ -2,21 +2,22 @@ package extension
 
 import (
 	"encoding/json"
+
 	"github.com/ProtoconNet/mitum-currency/v3/types"
 	"github.com/ProtoconNet/mitum2/util"
 	jsonenc "github.com/ProtoconNet/mitum2/util/encoder/json"
 	"github.com/ProtoconNet/mitum2/util/hint"
 )
 
-type CreateContractAccountsItemJSONMarshaler struct {
+type CreateContractAccountItemJSONMarshaler struct {
 	hint.BaseHinter
 	Keys     types.AccountKeys `json:"keys"`
 	Amounts  []types.Amount    `json:"amounts"`
 	AddrType hint.Type         `json:"addrtype"`
 }
 
-func (it BaseCreateContractAccountsItem) MarshalJSON() ([]byte, error) {
-	return util.MarshalJSON(CreateContractAccountsItemJSONMarshaler{
+func (it BaseCreateContractAccountItem) MarshalJSON() ([]byte, error) {
+	return util.MarshalJSON(CreateContractAccountItemJSONMarshaler{
 		BaseHinter: it.BaseHinter,
 		Keys:       it.keys,
 		Amounts:    it.amounts,
@@ -24,17 +25,17 @@ func (it BaseCreateContractAccountsItem) MarshalJSON() ([]byte, error) {
 	})
 }
 
-type CreateContractAccountsItemJSONUnMarshaler struct {
+type CreateContractAccountItemJSONUnMarshaler struct {
 	Hint     hint.Hint       `json:"_hint"`
 	Keys     json.RawMessage `json:"keys"`
 	Amounts  json.RawMessage `json:"amounts"`
 	AddrType string          `json:"addrtype"`
 }
 
-func (it *BaseCreateContractAccountsItem) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
-	e := util.StringError("failed to decode json of BaseCreateContractAccountsItem")
+func (it *BaseCreateContractAccountItem) DecodeJSON(b []byte, enc *jsonenc.Encoder) error {
+	e := util.StringError("failed to decode json of BaseCreateContractAccountItem")
 
-	var uit CreateContractAccountsItemJSONUnMarshaler
+	var uit CreateContractAccountItemJSONUnMarshaler
 	if err := enc.Unmarshal(b, &uit); err != nil {
 		return e.Wrap(err)
 	}

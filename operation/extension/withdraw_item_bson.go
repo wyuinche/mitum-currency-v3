@@ -7,7 +7,7 @@ import (
 	"go.mongodb.org/mongo-driver/bson"
 )
 
-func (it BaseWithdrawsItem) MarshalBSON() ([]byte, error) {
+func (it BaseWithdrawItem) MarshalBSON() ([]byte, error) {
 	return bsonenc.Marshal(
 		bson.M{
 			"_hint":   it.Hint().String(),
@@ -17,16 +17,16 @@ func (it BaseWithdrawsItem) MarshalBSON() ([]byte, error) {
 	)
 }
 
-type WithdrawsItemBSONUnmarshaler struct {
+type BaseWithdrawItemBSONUnmarshaler struct {
 	Hint    string   `bson:"_hint"`
 	Target  string   `bson:"target"`
 	Amounts bson.Raw `bson:"amounts"`
 }
 
-func (it *BaseWithdrawsItem) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
-	e := util.StringError("failed to decode bson of BaseWithdrawsItem")
+func (it *BaseWithdrawItem) DecodeBSON(b []byte, enc *bsonenc.Encoder) error {
+	e := util.StringError("failed to decode bson of BaseWithdrawItem")
 
-	var uit WithdrawsItemBSONUnmarshaler
+	var uit BaseWithdrawItemBSONUnmarshaler
 	if err := bson.Unmarshal(b, &uit); err != nil {
 		return e.Wrap(err)
 	}

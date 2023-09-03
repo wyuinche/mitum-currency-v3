@@ -3,12 +3,13 @@ package processor
 import (
 	"context"
 	"fmt"
+	"io"
+	"sync"
+
 	"github.com/ProtoconNet/mitum-currency/v3/operation/currency"
 	"github.com/ProtoconNet/mitum-currency/v3/operation/extension"
 	"github.com/ProtoconNet/mitum-currency/v3/types"
 	"github.com/ProtoconNet/mitum2/base"
-	"io"
-	"sync"
 
 	"github.com/ProtoconNet/mitum2/util"
 	"github.com/ProtoconNet/mitum2/util/hint"
@@ -326,8 +327,8 @@ func GetNewProcessor(opr *OperationProcessor, op base.Operation) (base.Operation
 		currency.CurrencyRegister,
 		currency.CurrencyPolicyUpdater,
 		currency.SuffrageInflation,
-		extension.CreateContractAccounts,
-		extension.Withdraws:
+		extension.CreateContractAccount,
+		extension.Withdraw:
 		return nil, false, errors.Errorf("%T needs SetProcessor", t)
 	default:
 		return nil, false, nil

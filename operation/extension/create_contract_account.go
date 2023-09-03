@@ -11,32 +11,32 @@ import (
 )
 
 var (
-	CreateContractAccountsFactHint = hint.MustNewHint("mitum-currency-create-contract-accounts-operation-fact-v0.0.1")
-	CreateContractAccountsHint     = hint.MustNewHint("mitum-currency-create-contract-accounts-operation-v0.0.1")
+	CreateContractAccountFactHint = hint.MustNewHint("mitum-currency-create-contract-account-operation-fact-v0.0.1")
+	CreateContractAccountHint     = hint.MustNewHint("mitum-currency-create-contract-account-operation-v0.0.1")
 )
 
-var MaxCreateContractAccountsItems uint = 10
+var MaxCreateContractAccountItems uint = 10
 
-type CreateContractAccountsItem interface {
+type CreateContractAccountItem interface {
 	hint.Hinter
 	util.IsValider
 	currency.AmountsItem
 	Bytes() []byte
 	Keys() types.AccountKeys
 	Address() (base.Address, error)
-	Rebuild() CreateContractAccountsItem
+	Rebuild() CreateContractAccountItem
 	AddressType() hint.Type
 }
 
-type CreateContractAccountsFact struct {
+type CreateContractAccountFact struct {
 	base.BaseFact
 	sender base.Address
-	items  []CreateContractAccountsItem
+	items  []CreateContractAccountItem
 }
 
-func NewCreateContractAccountsFact(token []byte, sender base.Address, items []CreateContractAccountsItem) CreateContractAccountsFact {
-	bf := base.NewBaseFact(CreateContractAccountsFactHint, token)
-	fact := CreateContractAccountsFact{
+func NewCreateContractAccountFact(token []byte, sender base.Address, items []CreateContractAccountItem) CreateContractAccountFact {
+	bf := base.NewBaseFact(CreateContractAccountFactHint, token)
+	fact := CreateContractAccountFact{
 		BaseFact: bf,
 		sender:   sender,
 		items:    items,
@@ -46,15 +46,15 @@ func NewCreateContractAccountsFact(token []byte, sender base.Address, items []Cr
 	return fact
 }
 
-func (fact CreateContractAccountsFact) Hash() util.Hash {
+func (fact CreateContractAccountFact) Hash() util.Hash {
 	return fact.BaseFact.Hash()
 }
 
-func (fact CreateContractAccountsFact) GenerateHash() util.Hash {
+func (fact CreateContractAccountFact) GenerateHash() util.Hash {
 	return valuehash.NewSHA256(fact.Bytes())
 }
 
-func (fact CreateContractAccountsFact) Bytes() []byte {
+func (fact CreateContractAccountFact) Bytes() []byte {
 	is := make([][]byte, len(fact.items))
 	for i := range fact.items {
 		is[i] = fact.items[i].Bytes()
@@ -67,7 +67,7 @@ func (fact CreateContractAccountsFact) Bytes() []byte {
 	)
 }
 
-func (fact CreateContractAccountsFact) IsValid(b []byte) error {
+func (fact CreateContractAccountFact) IsValid(b []byte) error {
 	if err := fact.BaseHinter.IsValid(nil); err != nil {
 		return err
 	}
@@ -78,8 +78,8 @@ func (fact CreateContractAccountsFact) IsValid(b []byte) error {
 
 	if n := len(fact.items); n < 1 {
 		return util.ErrInvalid.Errorf("empty items")
-	} else if n > int(MaxCreateContractAccountsItems) {
-		return util.ErrInvalid.Errorf("items, %d over max, %d", n, MaxCreateContractAccountsItems)
+	} else if n > int(MaxCreateContractAccountItems) {
+		return util.ErrInvalid.Errorf("items, %d over max, %d", n, MaxCreateContractAccountItems)
 	}
 
 	if err := util.CheckIsValiders(nil, false, fact.sender); err != nil {
@@ -111,19 +111,19 @@ func (fact CreateContractAccountsFact) IsValid(b []byte) error {
 	return nil
 }
 
-func (fact CreateContractAccountsFact) Token() base.Token {
+func (fact CreateContractAccountFact) Token() base.Token {
 	return fact.BaseFact.Token()
 }
 
-func (fact CreateContractAccountsFact) Sender() base.Address {
+func (fact CreateContractAccountFact) Sender() base.Address {
 	return fact.sender
 }
 
-func (fact CreateContractAccountsFact) Items() []CreateContractAccountsItem {
+func (fact CreateContractAccountFact) Items() []CreateContractAccountItem {
 	return fact.items
 }
 
-func (fact CreateContractAccountsFact) Targets() ([]base.Address, error) {
+func (fact CreateContractAccountFact) Targets() ([]base.Address, error) {
 	as := make([]base.Address, len(fact.items))
 	for i := range fact.items {
 		a, err := fact.items[i].Address()
@@ -136,7 +136,7 @@ func (fact CreateContractAccountsFact) Targets() ([]base.Address, error) {
 	return as, nil
 }
 
-func (fact CreateContractAccountsFact) Addresses() ([]base.Address, error) {
+func (fact CreateContractAccountFact) Addresses() ([]base.Address, error) {
 	as := make([]base.Address, len(fact.items)+1)
 
 	tas, err := fact.Targets()
@@ -150,8 +150,8 @@ func (fact CreateContractAccountsFact) Addresses() ([]base.Address, error) {
 	return as, nil
 }
 
-func (fact CreateContractAccountsFact) Rebuild() CreateContractAccountsFact {
-	items := make([]CreateContractAccountsItem, len(fact.items))
+func (fact CreateContractAccountFact) Rebuild() CreateContractAccountFact {
+	items := make([]CreateContractAccountItem, len(fact.items))
 	for i := range fact.items {
 		it := fact.items[i]
 		items[i] = it.Rebuild()
@@ -163,15 +163,15 @@ func (fact CreateContractAccountsFact) Rebuild() CreateContractAccountsFact {
 	return fact
 }
 
-type CreateContractAccounts struct {
+type CreateContractAccount struct {
 	common.BaseOperation
 }
 
-func NewCreateContractAccounts(fact CreateContractAccountsFact) (CreateContractAccounts, error) {
-	return CreateContractAccounts{BaseOperation: common.NewBaseOperation(CreateContractAccountsHint, fact)}, nil
+func NewCreateContractAccount(fact CreateContractAccountFact) (CreateContractAccount, error) {
+	return CreateContractAccount{BaseOperation: common.NewBaseOperation(CreateContractAccountHint, fact)}, nil
 }
 
-func (op *CreateContractAccounts) HashSign(priv base.Privatekey, networkID base.NetworkID) error {
+func (op *CreateContractAccount) HashSign(priv base.Privatekey, networkID base.NetworkID) error {
 	err := op.Sign(priv, networkID)
 	if err != nil {
 		return err
